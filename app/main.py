@@ -28,7 +28,7 @@ class ConnectionManager:
 
     async def broadcast(self, data: str):
         for connection in self.active_connections:
-            print("Sendig JSON data:", data)
+            #print("Sendig JSON data:", data)
             try:
                 await connection.send_text(data)
             except WebSocketDisconnect:
@@ -41,7 +41,7 @@ async def get_cpu_load():
     while True:
         cpu_percent = psutil.cpu_percent(interval=1)
         mem_percent = psutil.virtual_memory().percent
-        print(f"Current CPU load: {cpu_percent} % and memory: {mem_percent} %.")
+        #print(f"Current CPU load: {cpu_percent} % and memory: {mem_percent} %.")
         data = {"cpu": cpu_percent, "mem": mem_percent}
         json_string = json.dumps(data)
         await manager.broadcast(json_string)
