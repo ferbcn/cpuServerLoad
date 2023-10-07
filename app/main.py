@@ -42,7 +42,6 @@ async def get_cpu_load():
         cpu_percent = psutil.cpu_percent(interval=1)
         mem_percent = psutil.virtual_memory().percent
         print(f"Current CPU load: {cpu_percent} % and memory: {mem_percent} %.")
-        #await manager.broadcast(f"{cpu_percent}%")
         data = {"cpu": cpu_percent, "mem": mem_percent}
         json_string = json.dumps(data)
         await manager.broadcast(json_string)
@@ -57,7 +56,7 @@ def index(request: Request):
 
 
 # Websocket endpoint
-@app.websocket("/ws")
+@app.websocket("/wscpu")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
 
