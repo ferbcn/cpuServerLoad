@@ -4,39 +4,42 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='favicon.ico') }}">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
     <script src="{{ url_for('static', path='raphael-2.1.4.min.js') }}"></script>
     <script src="{{ url_for('static', path='justgage.js') }}"></script>
     <script src="{{ url_for('static', path='index.js') }}"></script>
     <title>CPU Load</title>
 </head>
 <body>
-    <h3>CPU Count: {{ cpu_count }}</h3>
-    <div>
-        <h4>CPU load: <class id="cpu-load">Waiting for data...</class></h4>
-    </div>
-    <div id="cpuLoadGauge" style="width:300px; height:300px;"></div>
-    <script>
-        var cpuLoadGauge = new JustGage({
-            id: "cpuLoadGauge",
-            value: 0,
-            min: 0,
-            max: 100,
-            title: "CPU Load"
-        });
-    </script>
+    <div class="main-container">
+        <h3>CPU Count: {{ cpu_count }}</h3>
+        <div>
+            <h4>CPU load: <class id="cpu-load">Waiting for data...</class></h4>
+        </div>
+        <div id="cpuLoadGauge"></div>
+        <script>
+            var cpuLoadGauge = new JustGage({
+                id: "cpuLoadGauge",
+                value: 0,
+                min: 0,
+                max: 100,
+                title: "CPU Load"
+            });
+        </script>
 
-    <div>
-        <h4>MEM load: <class id="mem-load">Waiting for data...</class></h4>
+        <div>
+            <h4>MEM load: <class id="mem-load">Waiting for data...</class></h4>
+        </div>
+        <div id="memLoadGauge"></div>
+        <script>
+            var memLoadGauge = new JustGage({
+                id: "memLoadGauge",
+                value: 0,
+                min: 0,
+                max: 100,
+                title: "MEM Load"
+            });
+        </script>
     </div>
-    <div id="memLoadGauge" style="width:300px; height:300px;"></div>
-    <script>
-        var memLoadGauge = new JustGage({
-            id: "memLoadGauge",
-            value: 0,
-            min: 0,
-            max: 100,
-            title: "MEM Load"
-        });
-    </script>
 </body>
 </html>

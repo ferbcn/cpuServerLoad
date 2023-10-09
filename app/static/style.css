@@ -1,0 +1,27 @@
+:root {
+  --main_color: lightgrey;
+  --bg_color: #212529;
+  --white: #ffffff;
+}
+
+html, body {
+    margin-top: 30px;
+    /*font-family: "Lucida Console", "Courier New", monospace;*/
+    background-color: var(--bg_color);
+    color: var(--main_color);
+}
+
+.main-container {
+
+    align-items: center;     /* Centers content vertically */
+    position: relative;
+
+    /* Optional: If you want the container to have a fixed size, you can specify it */
+    /* width: 400px; */
+    /* height: 300px; */
+}
+
+#memLoadGauge, #cpuLoadGauge {
+    width:50vw;
+    height:50vw;
+}

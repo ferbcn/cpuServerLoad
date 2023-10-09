@@ -1,10 +1,8 @@
 let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 let wsUrl = ws_scheme + '://' + window.location.host + "/wscpu"
 let socket = new WebSocket(wsUrl);
-//let socket = new WebSocket("ws://0.0.0.0:8000/ws");
 
 socket.onmessage = function(event) {
-
     try {
         let parsedData = JSON.parse(event.data);
         console.log(parsedData);
