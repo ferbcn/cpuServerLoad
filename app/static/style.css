@@ -9,18 +9,38 @@ html, body {
     background-color: var(--bg_color);
     color: var(--main_color);
 }
-
 .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers items horizontally */
+    gap: 20px; /* Gap between child elements */
+    padding: 20px; /* Spacing around the container */
+    font-family: Arial, sans-serif;
+}
 
-    align-items: center;     /* Centers content vertically */
-    position: relative;
+h3, h4, h6 {
+    margin: 0; /* Removes default margins for a tighter layout */
+    width: 100%; /* Ensures headers take full width */
+    text-align: center;
+}
 
-    /* Optional: If you want the container to have a fixed size, you can specify it */
-    /* width: 400px; */
-    /* height: 300px; */
+#cpuLoadGauge, #memLoadGauge {
+    width: 300px;
+    height: 150px;
+}
+
+/* Optional: Some basic resets for consistency across browsers */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 #memLoadGauge, #cpuLoadGauge {
-    width:50vw;
-    height:50vw;
+    color: var(--main_color);
+    width:50vh;
+    height:50vh;
+    max-width: 800px
+    max-height: 800px
 }
+
