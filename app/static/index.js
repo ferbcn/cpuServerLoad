@@ -8,8 +8,10 @@ socket.onmessage = function(event) {
         console.log(parsedData);
         let cpu_load = parsedData.cpu;
         let mem_load = parsedData.mem;
+        let conn_count = parsedData.conns;
         document.getElementById("cpu-load").innerText = cpu_load + "%";
         document.getElementById("mem-load").innerText = mem_load + "%";
+        document.getElementById("conn-count").innerText = conn_count;
         cpuLoadGauge.refresh(parseFloat(cpu_load));
         memLoadGauge.refresh(parseFloat(mem_load));
     } catch (error) {

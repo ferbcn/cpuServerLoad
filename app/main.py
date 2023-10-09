@@ -40,9 +40,11 @@ manager = ConnectionManager()
 async def get_cpu_load():
     while True:
         cpu_percent = psutil.cpu_percent(interval=1)
+        # cpu_percent = psutil.cpu_percent(interval=1, percpu=True)
         mem_percent = psutil.virtual_memory().percent
-        #print(f"Current CPU load: {cpu_percent} % and memory: {mem_percent} %.")
-        data = {"cpu": cpu_percent, "mem": mem_percent}
+        active_conns = len(manager.active_connections)
+        # print(f"Current CPU load: {cpu_percent} % and memory: {mem_percent} %.")
+        data = {"cpu": cpu_percent, "mem": mem_percent, "conns": active_conns}
         json_string = json.dumps(data)
         await manager.broadcast(json_string)
         await asyncio.sleep(1)
@@ -52,6 +54,7 @@ async def get_cpu_load():
 def index(request: Request):
     seconds_elapsed = int(time.time() - psutil.boot_time())
     cpu_count = psutil.cpu_count()
+
     return templates.TemplateResponse("index.html", {"request": request, "cpu_count": cpu_count, "uptime": seconds_elapsed})
 
 
