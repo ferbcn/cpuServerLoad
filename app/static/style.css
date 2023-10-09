@@ -18,15 +18,22 @@ html, body {
     font-family: Arial, sans-serif;
 }
 
-h3, h4, h6 {
+h4, h5, {
     margin: 0; /* Removes default margins for a tighter layout */
     width: 100%; /* Ensures headers take full width */
-    text-align: center;
+    text-align: left;
+}
+
+h3, h6 {
+    margin: 0; /* Removes default margins for a tighter layout */
+    width: 100%; /* Ensures headers take full width */
+    text-align: left;
 }
 
 #cpuLoadGauge, #memLoadGauge {
     width: 300px;
     height: 150px;
+
 }
 
 /* Optional: Some basic resets for consistency across browsers */
@@ -38,8 +45,8 @@ h3, h4, h6 {
 
 #memLoadGauge, #cpuLoadGauge {
     color: var(--main_color);
-    width:50vh;
-    height:50vh;
+    width:40vh;
+    height:40vh;
     max-width: 800px
     max-height: 800px
 }

@@ -15,33 +15,37 @@
         <h3>CPU Count: {{ cpu_count }}</h3>
         <div>
             <h4>CPU load: <class id="cpu-load">Waiting for data...</class></h4>
+
+            <div id="cpuLoadGauge"></div>
+            <script>
+                var cpuLoadGauge = new JustGage({
+                    id: "cpuLoadGauge",
+                    value: 0,
+                    min: 0,
+                    max: 100,
+                    title: "CPU Load"
+                });
+            </script>
         </div>
-        <div id="cpuLoadGauge"></div>
-        <script>
-            var cpuLoadGauge = new JustGage({
-                id: "cpuLoadGauge",
-                value: 0,
-                min: 0,
-                max: 100,
-                title: "CPU Load"
-            });
-        </script>
 
         <div>
             <h4>MEM load: <class id="mem-load">Waiting for data...</class></h4>
-        </div>
-        <div id="memLoadGauge"></div>
-        <script>
-            var memLoadGauge = new JustGage({
-                id: "memLoadGauge",
-                value: 0,
-                min: 0,
-                max: 100,
-                title: "MEM Load"
-            });
-        </script>
 
-        <h6>Active Connections: <class id="conn-count">Waiting for data...</class></h6>
+            <div id="memLoadGauge"></div>
+            <script>
+                var memLoadGauge = new JustGage({
+                    id: "memLoadGauge",
+                    value: 0,
+                    min: 0,
+                    max: 100,
+                    title: "MEM Load"
+                });
+            </script>
+        </div>
+
+        <div>
+            <h6>Active Connections: <class id="conn-count">Waiting for data...</class></h6>
+        </div>
 
     </div>
 </body>
