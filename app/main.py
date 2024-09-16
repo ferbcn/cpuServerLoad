@@ -15,6 +15,7 @@ app = FastAPI(title='WebsocketAPI')
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
@@ -34,6 +35,7 @@ class ConnectionManager:
             except WebSocketDisconnect:
                 self.disconnect(connection)
 
+
 manager = ConnectionManager()
 
 
@@ -51,12 +53,20 @@ async def get_cpu_load():
 
 
 @app.get("/", response_class=HTMLResponse)
-def index(request: Request):
+async def index(request: Request):
     seconds_elapsed = int(time.time() - psutil.boot_time())
     cpu_count = psutil.cpu_count()
 
     return templates.TemplateResponse("index.html", {"request": request, "cpu_count": cpu_count, "uptime": seconds_elapsed})
 
+
+@app.get("/api-stats", response_class=JSONResponse)
+async def stats():
+    cpu_percent = psutil.cpu_percent(interval=1)
+    mem_percent = psutil.virtual_memory().percent
+    active_conns = len(manager.active_connections)
+    data = {"cpu": cpu_percent, "mem": mem_percent, "conns": active_conns}
+    return data
 
 # Websocket endpoint
 @app.websocket("/wscpu")
@@ -72,6 +82,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+
 
 @app.on_event("startup")
 async def startup_event():
