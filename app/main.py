@@ -2,15 +2,22 @@ import time
 import json
 import uvicorn
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from typing import List
 import psutil
 import asyncio
+from contextlib import asynccontextmanager
 
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
-app = FastAPI(title='WebsocketAPI')
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(get_cpu_load())
+    yield
+    task.cancel()
+
+app = FastAPI(title='WebsocketAPI', lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -24,16 +31,15 @@ class ConnectionManager:
         await websocket.accept()
         self.active_connections.append(websocket)
 
-    def disconnect(self, websocket: WebSocket):
+    async def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
     async def broadcast(self, data: str):
         for connection in self.active_connections:
-            #print("Sendig JSON data:", data)
             try:
                 await connection.send_text(data)
             except WebSocketDisconnect:
-                self.disconnect(connection)
+                await self.disconnect(connection)
 
 
 manager = ConnectionManager()
@@ -42,10 +48,8 @@ manager = ConnectionManager()
 async def get_cpu_load():
     while True:
         cpu_percent = psutil.cpu_percent(interval=1)
-        # cpu_percent = psutil.cpu_percent(interval=1, percpu=True)
         mem_percent = psutil.virtual_memory().percent
         active_conns = len(manager.active_connections)
-        # print(f"Current CPU load: {cpu_percent} % and memory: {mem_percent} %.")
         data = {"cpu": cpu_percent, "mem": mem_percent, "conns": active_conns}
         json_string = json.dumps(data)
         await manager.broadcast(json_string)
@@ -60,33 +64,17 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "cpu_count": cpu_count, "uptime": seconds_elapsed})
 
 
-@app.get("/api-stats", response_class=JSONResponse)
-async def stats():
-    cpu_percent = psutil.cpu_percent(interval=1)
-    mem_percent = psutil.virtual_memory().percent
-    active_conns = len(manager.active_connections)
-    data = {"cpu": cpu_percent, "mem": mem_percent, "conns": active_conns}
-    return data
-
-# Websocket endpoint
 @app.websocket("/wscpu")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
 
     try:
-        # await for messages and send messages
         while True:
             data = await websocket.receive_text()
             if data == "ping":
                 await websocket.send_text("pong")
-
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
-
-
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(get_cpu_load())
+        await manager.disconnect(websocket)
 
 
 if __name__ == "__main__":
